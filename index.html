@@ -1,0 +1,502 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LogicIQ | Learn, Solve & Master</title>
+
+<!-- React without npm -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg:#0a0d18; --panel:#12182a; --panel2:#171f35;
+  --border:#27314b; --text:#edf1ff; --muted:#929dbb;
+  --purple:#9270ff; --cyan:#4de0dc; --pink:#ff73bd;
+  --green:#53e0a0; --orange:#ffbb70;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.app{min-height:100vh;background:radial-gradient(ellipse at 70% 0%,#20204a 0%,transparent 37%),radial-gradient(ellipse at 0% 70%,#102d3a 0%,transparent 35%),var(--bg)}
+.layout{display:grid;grid-template-columns:245px minmax(0,1fr);min-height:100vh}
+.sidebar{border-right:1px solid var(--border);padding:24px 15px;background:#0c1020e8;position:sticky;top:0;height:100vh;overflow:auto;z-index:5;backdrop-filter:blur(16px)}
+.logo{display:flex;align-items:center;gap:11px;padding:3px 9px 26px}
+.logo-icon{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#9270ff,#4de0dc);font-size:23px;box-shadow:0 0 30px #9270ff44;animation:float 4s ease-in-out infinite}
+.logo strong{font:700 22px 'Space Grotesk';letter-spacing:-1px}
+.logo small{display:block;color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:3px}
+.nav-label{color:#687594;font-size:10px;font-weight:700;letter-spacing:1.8px;margin:18px 12px 9px}
+.nav{width:100%;display:flex;align-items:center;gap:12px;padding:12px 13px;margin:3px 0;background:transparent;border:1px solid transparent;color:#aeb8d3;border-radius:12px;text-align:left;transition:.25s}
+.nav:hover{background:#ffffff08;color:white;transform:translateX(3px)}
+.nav.active{background:linear-gradient(100deg,#9270ff26,#4de0dc0b);border-color:#9270ff4d;color:white;box-shadow:inset 3px 0 var(--purple)}
+.nav .ico{font-size:18px;width:24px;text-align:center}
+.nav .count{margin-left:auto;font-size:10px;color:#7d8bab}
+.sidebar-bottom{margin:28px 5px 0;padding:15px;border-radius:16px;border:1px solid #343050;background:linear-gradient(135deg,#242044,#122337)}
+.sidebar-bottom b{font-size:12px}.sidebar-bottom p{font-size:11px;color:var(--muted);line-height:1.6}
+.mini-progress{height:5px;background:#303750;border-radius:10px;overflow:hidden}.mini-progress span{display:block;height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));transition:width .6s}
+.main{min-width:0;padding:25px clamp(16px,3vw,42px) 50px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:30px}
+.breadcrumb{color:var(--muted);font-size:12px}.breadcrumb b{color:var(--text)}
+.top-actions{display:flex;align-items:center;gap:10px}
+.pill{border:1px solid var(--border);border-radius:12px;background:#141a2d;color:var(--text);padding:9px 12px;font-size:12px}
+.avatar{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#ff73bd,#9270ff);font-weight:700}
+.page{animation:appear .4s ease both}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;margin-top:0}
+h1{font-size:clamp(27px,4vw,43px);letter-spacing:-1.6px;margin-bottom:12px;line-height:1.13}
+h2{font-size:23px;letter-spacing:-.5px}
+h3{font-size:16px}
+p{line-height:1.7}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--cyan);font-weight:700;margin-bottom:12px}
+.gradient-text{background:linear-gradient(100deg,#c1aaff,#5de9df);color:transparent;background-clip:text}
+.hero{position:relative;overflow:hidden;padding:clamp(23px,4vw,42px);border-radius:24px;border:1px solid #544b8a;background:linear-gradient(115deg,#251e49eF,#142d3be8);margin-bottom:22px}
+.hero:after{content:"∑";position:absolute;right:7%;top:-45px;font:180px 'Space Grotesk';color:#ffffff09;transform:rotate(-12deg);pointer-events:none}
+.hero-content{position:relative;z-index:1;max-width:690px}
+.hero p{color:#b8c3df;max-width:570px;font-size:14px}
+.button{border:0;border-radius:12px;padding:12px 17px;font-weight:700;font-size:12px;transition:transform .2s,box-shadow .2s,filter .2s}
+.button:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.primary{background:linear-gradient(100deg,#9470ff,#6b8cff);color:white;box-shadow:0 8px 24px #9270ff32}
+.secondary{background:#ffffff0b;border:1px solid var(--border);color:var(--text)}
+.success{background:#164638;color:#72f2bd;border:1px solid #28654e}
+.button-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:19px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:19px 0 30px}
+.stat,.card{background:linear-gradient(145deg,#151c30f5,#101626f5);border:1px solid var(--border);border-radius:17px;padding:19px;transition:transform .25s,border-color .25s,box-shadow .25s}
+.stat:hover,.card:hover{border-color:#6556a3;box-shadow:0 12px 35px #0002}
+.stat-label{color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:6px}
+.stat-value{font:700 27px 'Space Grotesk';margin:14px 0 5px}
+.stat-foot{font-size:10px;color:var(--green)}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:30px 0 15px}
+.section-head h2{margin:0}
+.module-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.module-card{position:relative;overflow:hidden;cursor:pointer;min-height:190px}
+.module-card:after{content:"";position:absolute;width:110px;height:110px;border-radius:50%;right:-38px;bottom:-43px;background:var(--glow,#9270ff);filter:blur(44px);opacity:.2;transition:opacity .3s}
+.module-card:hover:after{opacity:.6}
+.module-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.module-icon{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:var(--soft,#9270ff22);border:1px solid var(--glow,#9270ff44)}
+.tag{font-size:9px;color:#b9c5df;border:1px solid #34415f;padding:5px 8px;border-radius:8px}
+.module-card h3{margin:0 0 8px}
+.module-card p{font-size:12px;color:var(--muted);margin:0;line-height:1.6}
+.module-footer{display:flex;justify-content:space-between;align-items:center;margin-top:17px;color:#aeb8d3;font-size:11px}
+.arrow{color:var(--cyan);font-size:19px;transition:transform .2s}.module-card:hover .arrow{transform:translateX(5px)}
+.two-col{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.85fr);gap:17px}
+.list-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #ffffff0b;cursor:pointer}
+.list-row:last-child{border:0}
+.list-row:hover .list-title{color:var(--cyan)}
+.list-icon{width:39px;height:39px;display:grid;place-items:center;border-radius:12px;background:#ffffff09;font-size:19px}
+.list-title{font-size:12px;font-weight:700;transition:color .2s}.list-sub{font-size:10px;color:var(--muted);margin-top:5px}
+.row-end{margin-left:auto;color:var(--muted);font-size:11px}
+.topic-header{display:flex;align-items:flex-start;gap:17px;margin-bottom:24px}
+.topic-icon{width:64px;height:64px;flex-shrink:0;border-radius:19px;display:grid;place-items:center;font-size:30px;background:#9270ff1e;border:1px solid #9270ff55}
+.topic-header p{margin:8px 0 0;color:var(--muted);font-size:13px}
+.tabs{display:flex;gap:5px;padding:5px;background:#0e1424;border:1px solid var(--border);border-radius:14px;margin:20px 0;overflow-x:auto}
+.tab{white-space:nowrap;flex:1;padding:11px 13px;background:transparent;border:0;border-radius:10px;color:var(--muted);font-size:12px;font-weight:700}
+.tab.active{background:#262342;color:white;box-shadow:inset 0 0 0 1px #6255a5}
+.content-card{padding:clamp(18px,3vw,28px);margin-bottom:16px}
+.content-card h3{margin-bottom:12px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{font-size:11px;color:#b5c0da;font-weight:600}
+.field input,.field select,.field textarea{width:100%;border-radius:11px;padding:12px 13px;background:#0b1120;border:1px solid #303a56;color:var(--text);outline:none}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--purple);box-shadow:0 0 0 3px #9270ff17}
+.field textarea{min-height:100px;resize:vertical;line-height:1.7}
+.field small{color:var(--muted);font-size:10px}
+.result{padding:20px;border-radius:15px;background:#0c1724;border:1px solid #315b54;margin-top:18px;animation:appear .3s ease}
+.result h3{color:var(--green)}
+.result p{font-size:13px;color:#d1d9ed;white-space:pre-line}
+.formula{padding:15px;border:1px dashed #6556a3;background:#9270ff0d;border-radius:12px;font:600 13px 'Space Grotesk';line-height:1.9;color:#d5c9ff;margin:14px 0}
+.tip{padding:14px;border-radius:12px;background:#4de0dc0b;border:1px solid #4de0dc28;color:#b9e9e6;font-size:12px;line-height:1.7;margin:12px 0}
+.choice{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--border);padding:13px;border-radius:11px;margin:9px 0;cursor:pointer;transition:.2s;font-size:12px}
+.choice:hover{border-color:#7763d0;background:#9270ff0b}
+.choice.selected{border-color:var(--purple);background:#9270ff18}
+.choice.correct{border-color:#53e0a0;background:#53e0a00d}
+.choice.wrong{border-color:#ff7373;background:#ff73730d}
+.choice input{accent-color:var(--purple);margin-top:2px}
+.question-number{color:var(--cyan);font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:700}
+.chart-bars{display:flex;align-items:flex-end;gap:12px;height:210px;border-bottom:1px solid #39425b;padding:10px 8px 0;margin-top:15px}
+.chart-bar-wrap{height:100%;display:flex;align-items:center;justify-content:flex-end;flex-direction:column;gap:7px;flex:1;min-width:0}
+.chart-bar{width:min(100%,45px);border-radius:7px 7px 2px 2px;background:linear-gradient(180deg,#5ce4dd,#9270ff);min-height:3px;animation:grow .8s cubic-bezier(.2,.8,.2,1) both;transform-origin:bottom;box-shadow:0 0 18px #9270ff1d}
+.chart-label{font-size:9px;color:var(--muted);text-align:center;overflow-wrap:anywhere}
+.chart-number{font-size:10px;color:#c8d2ed}
+.pie-chart{width:160px;height:160px;border-radius:50%;margin:10px auto;background:conic-gradient(#9270ff 0 30%,#4de0dc 30% 55%,#ff73bd 55% 78%,#ffbb70 78% 100%);position:relative;animation:spinIn .8s ease}
+.pie-chart:after{content:"DATA";position:absolute;inset:28%;border-radius:50%;background:#131a2c;display:grid;place-items:center;font:700 12px 'Space Grotesk';color:white}
+.legend{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;font-size:10px;color:var(--muted)}
+.legend span:before{content:"";display:inline-block;width:8px;height:8px;border-radius:3px;background:var(--c);margin-right:5px}
+.empty{padding:28px;text-align:center;color:var(--muted);font-size:12px}
+footer{text-align:center;padding:30px 0 5px;color:#65718f;font-size:10px}
+.mobile-menu{display:none}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;border-radius:8px;padding:6px 9px;background:#53e0a015;color:var(--green);border:1px solid #53e0a029}
+kbd{border:1px solid #414b67;background:#222b40;padding:3px 6px;border-radius:5px;font-size:10px}
+@keyframes appear{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes grow{from{transform:scaleY(.05);opacity:.2}to{transform:scaleY(1);opacity:1}}
+@keyframes spinIn{from{transform:rotate(-80deg) scale(.75);opacity:.3}to{transform:rotate(0) scale(1);opacity:1}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@media(max-width:1100px){.module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+ .layout{grid-template-columns:1fr}.sidebar{position:fixed;left:-270px;width:245px;transition:left .3s;box-shadow:20px 0 60px #0008}.sidebar.open{left:0}
+ .mobile-menu{display:inline-flex}.main{padding:18px 15px 35px}.topbar{margin-bottom:23px}.two-col{grid-template-columns:1fr}
+ .module-grid{grid-template-columns:1fr 1fr}.module-card{padding:15px;min-height:190px}.stats{gap:9px}.stat{padding:14px}.stat-value{font-size:23px}
+ .hero{padding:24px}.form-grid{grid-template-columns:1fr}.topic-icon{width:52px;height:52px}.topic-header{gap:12px}
+}
+@media(max-width:430px){.module-grid{grid-template-columns:1fr}.module-card{min-height:160px}.top-actions .pill{display:none}.hero h1{font-size:29px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const {useState,useEffect} = React;
+
+const modules = [
+ {id:"clock",name:"Clock Problems",icon:"🕒",tag:"LOGIC",desc:"Angles, time gain/loss, and clock reasoning.",color:"#9270ff",formula:"Angle = |30H − 5.5M| degrees. Use the smaller angle: min(angle, 360 − angle).",concept:"The minute hand moves 6° per minute. The hour hand moves 0.5° per minute, or 30° per hour. To find the angle, subtract the positions of the two hands.",example:"At 3:20, the minute hand is at 120°. The hour hand is at 90° + 10° = 100°. Difference = 20°.",tip:"Remember that the hour hand continues to move while the minute hand moves."},
+ {id:"calendar",name:"Calendar Problems",icon:"📅",tag:"LOGIC",desc:"Weekdays, leap years, and date calculations.",color:"#4de0dc",formula:"Weekday index = (date offset from a known date) mod 7.",concept:"A normal year has 365 days = 52 weeks + 1 day, so the weekday advances by one. A leap year has 366 days, so it advances by two. A leap year is divisible by 4, except century years must be divisible by 400.",example:"If 1 January is Monday in a normal year, 1 January of the next year is Tuesday.",tip:"Use the built-in calendar calculation in the solver to verify the weekday for a valid date."},
+ {id:"pattern",name:"Figures & Patterns",icon:"🧩",tag:"LOGIC",desc:"Number sequences, rules, and missing terms.",color:"#ff73bd",formula:"Check differences → ratios → second differences → alternating patterns.",concept:"Look for a consistent rule connecting terms. First check addition or subtraction, then multiplication or division. If differences change, examine the second differences or alternating positions.",example:"2, 5, 8, 11, ? Each term increases by 3, so the answer is 14.",tip:"Always explain the rule, not only the missing number."},
+ {id:"table",name:"Tabular Data",icon:"📋",tag:"DATA",desc:"Totals, averages, percentages, and comparisons.",color:"#ffbb70",formula:"Average = Sum ÷ Count. Percentage = Part ÷ Whole × 100.",concept:"Read the row and column headings carefully. Calculate totals before percentages, and compare values only when they use the same units.",example:"Sales of 20, 30, and 40 units total 90. The average is 90 ÷ 3 = 30 units.",tip:"Check whether a question asks for an absolute difference or a percentage change."},
+ {id:"bar",name:"Bar Graph Analysis",icon:"📊",tag:"CHARTS",desc:"Compare categories with clear visual bars.",color:"#9270ff",formula:"Percentage change = (New − Old) ÷ Old × 100.",concept:"Bar graphs compare discrete categories. Compare bar heights using the same scale. The difference is subtraction; percentage change uses the original value as the denominator.",example:"Category A = 40 and B = 60. B exceeds A by 20, or 50% of A.",tip:"Check the axis scale before reading values."},
+ {id:"pie",name:"Pie Chart Analysis",icon:"🥧",tag:"CHARTS",desc:"Sector angles, proportions, and percentages.",color:"#ff73bd",formula:"Sector angle = (Category value ÷ Total) × 360°.",concept:"A pie chart represents a whole as 100% or 360°. Convert the category's share of the total into a percentage or angle.",example:"A category with 25% of the total has an angle of 0.25 × 360° = 90°.",tip:"All category percentages must total 100%, and all sector angles must total 360°."},
+ {id:"line",name:"Line Graph Analysis",icon:"📈",tag:"CHARTS",desc:"Trends, growth, declines, and comparisons.",color:"#4de0dc",formula:"Absolute change = Final − Initial. Percentage change = Change ÷ Initial × 100.",concept:"Line graphs show how a value changes across ordered points, often over time. Examine the direction, steepness, and magnitude of each change.",example:"A value increases from 50 to 65. The increase is 15, equal to 30% of 50.",tip:"A rising line shows an increase, not necessarily a constant rate of increase."},
+ {id:"scatter",name:"Scatter Diagram",icon:"🔵",tag:"CHARTS",desc:"Explore relationships between two variables.",color:"#4de0dc",formula:"Correlation describes direction and strength; it does not prove causation.",concept:"Each point represents a pair of observations (x,y). An upward pattern suggests positive association; a downward pattern suggests negative association. A random cloud suggests weak or no linear association.",example:"If study hours and scores tend to rise together, the scatter plot may show positive association.",tip:"An association between two variables does not prove that one causes the other."},
+ {id:"histogram",name:"Histogram Analysis",icon:"📶",tag:"CHARTS",desc:"Frequency distributions and class intervals.",color:"#ffbb70",formula:"Class width = (Maximum − Minimum) ÷ Number of classes.",concept:"A histogram groups numerical data into intervals. The height represents frequency when class widths are equal. Unlike a standard bar chart, histogram bars touch because intervals are continuous.",example:"Values 1, 2, 2, 3, 4, 4, 4 can be grouped into intervals and counted.",tip:"Make the intervals mutually exclusive so each observation is counted once."},
+ {id:"caselet",name:"Caselet DI",icon:"📚",tag:"DATA",desc:"Extract facts and calculate from a paragraph.",color:"#9270ff",formula:"Identify facts → organize values → choose the required operation → verify.",concept:"A caselet presents numerical information in words instead of a ready-made table. Convert the statements into a small table before performing calculations.",example:"A club has 40 members; 25 play cricket and 18 play football, with 8 playing both. At least one sport = 25 + 18 − 8 = 35.",tip:"Watch for words such as 'only', 'both', 'remaining', and 'at least'."},
+ {id:"webdi",name:"Web-based DI",icon:"🌐",tag:"DATA",desc:"Analyze report-style datasets and KPI summaries.",color:"#4de0dc",formula:"KPI = measure of performance. Compare actual values against targets or periods.",concept:"Web-based DI presents information in dashboard cards, tables, charts, and KPI reports. Read the title, units, time period, and definitions before comparing values.",example:"If a report shows 120 completed tasks out of 150, completion = 120 ÷ 150 × 100 = 80%.",tip:"Check if the figures are counts, percentages, currency, or rates."},
+ {id:"missing",name:"Missing DI",icon:"🕵️",tag:"DATA",desc:"Find unknown values from totals and averages.",color:"#ff73bd",formula:"Missing value = Total − Sum of known values.",concept:"A missing-data problem provides a total, average, ratio, or another constraint. Translate the condition into an equation and solve for the unknown.",example:"Four values total 100. If three are 20, 25, and 30, the missing value is 100 − 75 = 25.",tip:"If an average is given, calculate the total first: Total = Average × Count."}
+];
+
+const practiceBank = {
+ clock:[
+  {q:"What is the smaller angle between the hands at 3:00?",opts:["60°","90°","120°","30°"],a:1,why:"At 3:00, the hour hand is at 90° and the minute hand is at 0°. The smaller angle is 90°."},
+  {q:"How many degrees does the minute hand move in 10 minutes?",opts:["30°","60°","90°","120°"],a:1,why:"The minute hand moves 6° per minute. 10 × 6° = 60°."},
+  {q:"What is the smaller angle at 6:00?",opts:["90°","120°","180°","150°"],a:2,why:"At 6:00 the hands point in opposite directions, giving 180°."}
+ ],
+ calendar:[
+  {q:"How many days are in a leap year?",opts:["364","365","366","367"],a:2,why:"A leap year has 366 days, including 29 February."},
+  {q:"Which century year is a leap year?",opts:["1700","1800","1900","2000"],a:3,why:"Century years must be divisible by 400. The year 2000 qualifies."},
+  {q:"A normal year has how many odd days?",opts:["0","1","2","7"],a:1,why:"365 = 52 × 7 + 1, so there is one odd day."}
+ ],
+ pattern:[
+  {q:"Find the next number: 3, 6, 9, 12, ?",opts:["13","14","15","18"],a:2,why:"Each term increases by 3, so the next term is 15."},
+  {q:"Find the next number: 2, 4, 8, 16, ?",opts:["18","24","30","32"],a:3,why:"Each term is multiplied by 2. The next term is 32."},
+  {q:"Find the next number: 1, 4, 9, 16, ?",opts:["20","24","25","36"],a:2,why:"These are squares: 1², 2², 3², 4². Next is 5² = 25."}
+ ],
+ table:[
+  {q:"Values are 10, 20, 30. What is their average?",opts:["15","20","25","60"],a:1,why:"Sum = 60; average = 60 ÷ 3 = 20."},
+  {q:"A value rises from 40 to 50. What is the percentage increase?",opts:["10%","20%","25%","50%"],a:2,why:"Increase = 10. Percentage increase = 10 ÷ 40 × 100 = 25%."}
+ ],
+ bar:[
+  {q:"Category A is 40 and B is 60. By how much does B exceed A?",opts:["10","20","40%","50"],a:1,why:"Difference = 60 − 40 = 20."},
+  {q:"A bar increases from 80 to 100. What is the percentage increase?",opts:["20%","25%","30%","80%"],a:1,why:"Increase is 20; 20 ÷ 80 × 100 = 25%."}
+ ],
+ pie:[
+  {q:"What is the angle for a 25% pie-chart sector?",opts:["45°","60°","90°","120°"],a:2,why:"25% × 360° = 90°."},
+  {q:"A 20% share of 500 equals?",opts:["50","80","100","120"],a:2,why:"0.20 × 500 = 100."}
+ ],
+ line:[
+  {q:"A value rises from 50 to 65. What is the increase?",opts:["10","15","25","30"],a:1,why:"65 − 50 = 15."},
+  {q:"A value drops from 80 to 60. Percentage decrease?",opts:["20%","25%","30%","33.3%"],a:1,why:"Decrease = 20. Divide by original 80: 20 ÷ 80 × 100 = 25%."}
+ ],
+ scatter:[
+  {q:"Points tend to rise from left to right. What association is suggested?",opts:["Negative","Positive","No relationship always","Causation"],a:1,why:"An upward trend suggests a positive association, but does not establish causation."},
+  {q:"Does correlation alone prove causation?",opts:["Yes","No","Only for positive values","Always for large samples"],a:1,why:"Correlation alone cannot establish a cause-and-effect relationship."}
+ ],
+ histogram:[
+  {q:"What does a histogram primarily show?",opts:["Categories only","Frequency distribution","A single total","A calendar"],a:1,why:"A histogram groups numerical values into intervals and displays their frequencies."},
+  {q:"Why do histogram bars usually touch?",opts:["To save space","Intervals are continuous","All frequencies are equal","It is decorative"],a:1,why:"Adjacent bars represent adjoining continuous numerical intervals."}
+ ],
+ caselet:[
+  {q:"25 play cricket, 18 football, and 8 play both. How many play at least one?",opts:["35","43","51","33"],a:0,why:"25 + 18 − 8 = 35. Subtract the overlap once."},
+  {q:"A class has 40 students and 15 are absent. How many are present?",opts:["15","20","25","55"],a:2,why:"Present = 40 − 15 = 25."}
+ ],
+ webdi:[
+  {q:"120 tasks are completed out of 150. What is the completion rate?",opts:["70%","75%","80%","85%"],a:2,why:"120 ÷ 150 × 100 = 80%."},
+  {q:"A KPI rises from 200 to 240. What is the increase?",opts:["15%","20%","25%","40%"],a:1,why:"Increase = 40; 40 ÷ 200 × 100 = 20%."}
+ ],
+ missing:[
+  {q:"Four values total 100. Three are 20, 25, and 30. Find the missing value.",opts:["20","25","30","35"],a:1,why:"100 − (20 + 25 + 30) = 25."},
+  {q:"The average of 5 values is 12. What is their total?",opts:["17","50","60","72"],a:2,why:"Total = average × count = 12 × 5 = 60."}
+ ]
+};
+
+function parseNumbers(s){
+ const nums=s.split(/[\s,;]+/).filter(Boolean).map(Number);
+ if(!nums.length||nums.some(n=>!Number.isFinite(n))) throw Error("Enter valid numbers separated by commas.");
+ return nums;
+}
+function angleClock(h,m){
+ const angle=Math.abs((h%12)*30+m*.5-m*6);
+ return Math.min(angle,360-angle);
+}
+function calculate(id, form){
+ const num = k => Number(form[k]);
+ const text = k => String(form[k] ?? "").trim();
+ if(id==="clock"){
+  const h=num("hour"),m=num("minute");
+  if(!Number.isInteger(h)||h<0||h>23||!Number.isInteger(m)||m<0||m>59) throw Error("Enter an hour from 0–23 and a minute from 0–59.");
+  const a=angleClock(h,m);
+  return `Smaller angle: ${a.toFixed(2)}°\nHour hand position: ${(((h%12)*30+m*.5)%360).toFixed(2)}°\nMinute hand position: ${(m*6).toFixed(2)}°\nMethod: compare the two hand positions and take the smaller angle.`;
+ }
+ if(id==="calendar"){
+  const y=num("year"),mo=num("month"),d=num("day");
+  const dt=new Date(y,mo-1,d);
+  if(!Number.isInteger(y)||y<1||y>9999||!Number.isInteger(mo)||!Number.isInteger(d)||mo<1||mo>12||d<1||dt.getFullYear()!==y||dt.getMonth()!==mo-1||dt.getDate()!==d) throw Error("Enter a valid date.");
+  const leap=(y%4===0&&y%100!==0)||y%400===0;
+  return `${dt.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}\n${y} is ${leap?"a leap year":"not a leap year"}.\nNumber of days in the year: ${leap?366:365}.`;
+ }
+ if(id==="pattern"){
+  const a=parseNumbers(text("sequence"));
+  if(a.length<3) throw Error("Enter at least three terms.");
+  const dif=a.slice(1).map((v,i)=>v-a[i]);
+  let next;
+  if(dif.every(v=>v===dif[0])) next=a[a.length-1]+dif[0];
+  else {
+   const ratios=a.slice(1).map((v,i)=>a[i]!==0?v/a[i]:NaN);
+   if(ratios.every(v=>v===ratios[0]&&Number.isFinite(v))) next=a[a.length-1]*ratios[0];
+   else {
+    const d2=dif.slice(1).map((v,i)=>v-dif[i]);
+    if(d2.every(v=>v===d2[0])) next=a[a.length-1]+dif[dif.length-1]+d2[0];
+    else throw Error("No simple arithmetic, geometric, or constant-second-difference pattern found. Try another sequence.");
+   }
+  }
+  return `Sequence: ${a.join(", ")}\nNext term: ${next}\nMethod: ${dif.every(v=>v===dif[0])?"constant difference":a.slice(1).every((v,i)=>a[i]!==0&&v/a[i]===a[1]/a[0])?"constant ratio":"constant second difference"}.`;
+ }
+ if(["table","bar","line","webdi","caselet","scatter","histogram"].includes(id)){
+  const a=parseNumbers(text("values"));
+  if(id==="scatter"){
+   if(a.length<4||a.length%2!==0) throw Error("Enter an even number of values as x,y pairs, e.g. 1,2,2,4,3,6.");
+   const xs=a.filter((_,i)=>i%2===0),ys=a.filter((_,i)=>i%2===1);
+   const avg=x=>x.reduce((s,v)=>s+v,0)/x.length;
+   const mx=avg(xs),my=avg(ys);
+   const cov=xs.reduce((s,x,i)=>s+(x-mx)*(ys[i]-my),0);
+   const vx=xs.reduce((s,x)=>s+(x-mx)**2,0),vy=ys.reduce((s,y)=>s+(y-my)**2,0);
+   const r=vx&&vy?cov/Math.sqrt(vx*vy):NaN;
+   return `Pairs: ${xs.map((x,i)=>`(${x}, ${ys[i]})`).join(", ")}\nCorrelation coefficient r: ${Number.isFinite(r)?r.toFixed(3):"undefined (constant values)"}\nInterpretation: ${!Number.isFinite(r)?"Cannot calculate correlation for constant values.":r>.6?"Strong positive linear association":r>.2?"Moderate positive linear association":r<-.6?"Strong negative linear association":r<-.2?"Moderate negative linear association":"Weak linear association"}.\nCorrelation does not prove causation.`;
+  }
+  if(id==="histogram"){
+   const min=Math.min(...a),max=Math.max(...a),bins=Math.min(6,Math.max(2,Math.ceil(Math.sqrt(a.length))));
+   const width=(max-min||1)/bins;
+   const counts=Array(bins).fill(0);
+   a.forEach(v=>counts[Math.min(bins-1,Math.floor((v-min)/width))]++);
+   return `Count: ${a.length}\nMinimum: ${min}\nMaximum: ${max}\nSuggested number of intervals: ${bins}\nInterval width: ${width.toFixed(2)}\nFrequencies: ${counts.join(", ")}\nFrequencies sum to ${counts.reduce((s,v)=>s+v,0)} observations.`;
+  }
+  const sum=a.reduce((s,v)=>s+v,0),avg=sum/a.length;
+  const change=a.length>1?a[a.length-1]-a[0]:0;
+  return `Values: ${a.join(", ")}\nCount: ${a.length}\nTotal: ${sum}\nAverage: ${avg.toFixed(2)}\nMinimum: ${Math.min(...a)}\nMaximum: ${Math.max(...a)}\n${a.length>1?`First-to-last change: ${change}\nPercentage change: ${a[0]!==0?(change/Math.abs(a[0])*100).toFixed(2)+"%":"undefined because the first value is zero"}`:"Add more values to compare changes."}`;
+ }
+ if(id==="pie"){
+  const a=parseNumbers(text("values"));
+  if(a.some(v=>v<0)||a.reduce((s,v)=>s+v,0)<=0) throw Error("Enter non-negative values with a positive total.");
+  const total=a.reduce((s,v)=>s+v,0);
+  return `Total: ${total}\n${a.map((v,i)=>`Category ${i+1}: ${((v/total)*100).toFixed(2)}% = ${((v/total)*360).toFixed(2)}°`).join("\n")}\nCheck: all sector angles total 360°.`;
+ }
+ if(id==="missing"){
+  const total=num("total"),known=parseNumbers(text("known"));
+  const count=num("count");
+  if(!Number.isFinite(total)||!Number.isInteger(count)||count<known.length+1) throw Error("The total must be numeric and count must be greater than the number of known values.");
+  const missing=total-known.reduce((s,v)=>s+v,0);
+  return `Known values: ${known.join(", ")}\nSum of known values: ${known.reduce((s,v)=>s+v,0)}\nRequired total: ${total}\nMissing value: ${missing}\n${count>known.length+1?`Note: this assumes there is exactly one unknown and other positions are not needed. Total number of values supplied as context: ${count}.`:"Method: subtract the sum of known values from the total."}`;
+ }
+ throw Error("Select a supported module.");
+}
+
+function App(){
+ const [page,setPage]=useState("dashboard");
+ const [moduleId,setModuleId]=useState("clock");
+ const [topicTab,setTopicTab]=useState("learn");
+ const [form,setForm]=useState({});
+ const [result,setResult]=useState("");
+ const [error,setError]=useState("");
+ const [mobileOpen,setMobileOpen]=useState(false);
+ const [practiceIndex,setPracticeIndex]=useState(0);
+ const [selected,setSelected]=useState({});
+ const [checked,setChecked]=useState({});
+ const [practiceScore,setPracticeScore]=useState(0);
+ const [answered,setAnswered]=useState(0);
+ const [streak,setStreak]=useState(0);
+ const [history,setHistory]=useState([]);
+ const [search,setSearch]=useState("");
+ const [difficulty,setDifficulty]=useState("All");
+
+ useEffect(()=>{
+  try{
+   const saved=JSON.parse(localStorage.getItem("logiciq-progress")||"{}");
+   if(saved.score!==undefined)setPracticeScore(saved.score);
+   if(saved.answered!==undefined)setAnswered(saved.answered);
+   if(saved.streak!==undefined)setStreak(saved.streak);
+   if(Array.isArray(saved.history))setHistory(saved.history);
+  }catch(e){}
+ },[]);
+ useEffect(()=>{
+  try{localStorage.setItem("logiciq-progress",JSON.stringify({score:practiceScore,answered,streak,history}));}catch(e){}
+ },[practiceScore,answered,streak,history]);
+
+ const mod=modules.find(m=>m.id===moduleId)||modules[0];
+ const questions=practiceBank[moduleId]||practiceBank.clock;
+ const q=questions[practiceIndex%questions.length];
+ const completedTopics=new Set(history.map(h=>h.id));
+ const accuracy=answered?Math.round(practiceScore/answered*100):0;
+ const filtered=modules.filter(m=>(m.name+" "+m.desc+" "+m.tag).toLowerCase().includes(search.toLowerCase())&&(difficulty==="All"||m.tag===difficulty));
+ function openTopic(id,tab="learn"){
+  setModuleId(id);setPage("topic");setTopicTab(tab);setForm({});setResult("");setError("");setPracticeIndex(0);setSelected({});setChecked({});setMobileOpen(false);window.scrollTo(0,0);
+ }
+ function navigate(p){setPage(p);setMobileOpen(false);window.scrollTo(0,0);}
+ function solve(){
+  setError("");setResult("");
+  try{
+   const r=calculate(moduleId,form);setResult(r);
+   setHistory(old=>[{id:moduleId,name:mod.name,time:new Date().toLocaleTimeString(),summary:r.split("\n")[0]},...old.filter((x,i)=>i<5)]);
+  }catch(e){setError(e.message||"Please check your inputs.");}
+ }
+ function answerQuestion(){
+  if(selected[practiceIndex]===undefined||checked[practiceIndex])return;
+  const correct=selected[practiceIndex]===q.a;
+  setChecked(old=>({...old,[practiceIndex]:true}));
+  setAnswered(v=>v+1);
+  if(correct){setPracticeScore(v=>v+1);setStreak(v=>v+1)}else setStreak(0);
+ }
+ function nextQuestion(){setPracticeIndex(v=>(v+1)%questions.length);setSelected(old=>({...old}));}
+ function resetPractice(){setPracticeIndex(0);setSelected({});setChecked({});}
+ const navGroups=[
+  {label:"WORKSPACE",items:[["dashboard","▦","Dashboard"],["learn","✦","Learn concepts"],["solver","⌘","Problem solver"],["practice","◈","Practice arena"]]},
+  {label:"TOPIC LIBRARY",items:[["clock","🕒","Clock problems"],["calendar","📅","Calendar problems"],["pattern","🧩","Figures & patterns"],["table","▤","Tabular DI"],["bar","▥","Bar graph"],["pie","◉","Pie chart"],["line","⌁","Line graph"],["scatter","⠿","Scatter diagram"],["histogram","▥","Histogram"],["caselet","▧","Caselet DI"],["webdi","◎","Web-based DI"],["missing","?","Missing DI"]]}
+ ];
+ const currentTitle=page==="dashboard"?"Dashboard":page==="learn"?"Learn concepts":page==="solver"?"Problem solver":page==="practice"?"Practice arena":mod.name;
+ const dataModuleIds=["table","bar","pie","line","scatter","histogram","caselet","webdi"];
+ function setField(k,v){setForm(old=>({...old,[k]:v}));setResult("");setError("");}
+
+ return <div className="app"><div className="layout">
+ <aside className={"sidebar "+(mobileOpen?"open":"")}>
+  <div className="logo"><div className="logo-icon">∑</div><div><strong>Logic<span className="gradient-text">IQ</span></strong><small>THINK • SOLVE • GROW</small></div></div>
+  {navGroups.map(group=><React.Fragment key={group.label}><div className="nav-label">{group.label}</div>{group.items.map(([id,ico,label])=>{
+   const active=page===id||(page==="topic"&&moduleId===id);
+   return <button key={id} className={"nav "+(active?"active":"")} onClick={()=>id==="dashboard"||id==="learn"||id==="solver"||id==="practice"?navigate(id):openTopic(id)}><span className="ico">{ico}</span><span>{label}</span>{group.label==="TOPIC LIBRARY"&&completedTopics.has(id)&&<span className="count">✓</span>}</button>
+  })}</React.Fragment>)}
+  <div className="sidebar-bottom"><b>⚡ Your learning journey</b><p>{completedTopics.size} topic(s) explored. Keep solving to build your skills!</p><div className="mini-progress"><span style={{width:(completedTopics.size/12*100)+"%"}}/></div><p>{completedTopics.size}/12 topics explored</p></div>
+ </aside>
+
+ <main className="main">
+  <header className="topbar">
+   <div style={{display:"flex",alignItems:"center",gap:12}}><button className="button secondary mobile-menu" onClick={()=>setMobileOpen(v=>!v)}>☰</button><div className="breadcrumb">LogicIQ <span style={{margin:"0 8px"}}>/</span> <b>{currentTitle}</b></div></div>
+   <div className="top-actions"><span className="pill">⚡ {practiceScore} XP</span><span className="pill">🔥 {streak} streak</span><div className="avatar" title="Learner">L</div></div>
+  </header>
+
+  {page==="dashboard"&&<div className="page">
+   <section className="hero"><div className="hero-content"><div className="eyebrow">✦ YOUR PERSONAL REASONING LAB</div><h1>Train your mind.<br/><span className="gradient-text">Master every problem.</span></h1><p>Learn logical reasoning, decode data, and turn complex aptitude questions into simple, step-by-step solutions. Your next breakthrough starts here.</p><div className="button-row"><button className="button primary" onClick={()=>navigate("learn")}>Start learning ↗</button><button className="button secondary" onClick={()=>navigate("practice")}>⚡ Practice now</button></div></div></section>
+   <div className="stats">
+    <div className="stat"><div className="stat-label">AVAILABLE MODULES <span>◈</span></div><div className="stat-value">12</div><div className="stat-foot">All syllabus topics</div></div>
+    <div className="stat"><div className="stat-label">QUESTIONS ANSWERED <span>✎</span></div><div className="stat-value">{answered}</div><div className="stat-foot">Your total attempts</div></div>
+    <div className="stat"><div className="stat-label">ACCURACY <span>◎</span></div><div className="stat-value">{accuracy}%</div><div className="stat-foot">Based on answered questions</div></div>
+    <div className="stat"><div className="stat-label">TOPICS EXPLORED <span>✦</span></div><div className="stat-value">{completedTopics.size}<span style={{fontSize:14,color:"var(--muted)"}}>/12</span></div><div className="stat-foot">Keep the momentum</div></div>
+   </div>
+   <div className="section-head"><h2>Explore your toolkit</h2><button className="button secondary" onClick={()=>navigate("learn")}>View all →</button></div>
+   <div className="module-grid">{modules.slice(0,6).map(m=><ModuleCard key={m.id} m={m} onClick={()=>openTopic(m.id)} />)}</div>
+   <div className="two-col" style={{marginTop:22}}>
+    <div className="card"><div className="section-head" style={{marginTop:0}}><h2>Continue learning</h2><span className="badge">12 MODULES</span></div>{modules.slice(6,10).map(m=><div key={m.id} className="list-row" onClick={()=>openTopic(m.id)}><div className="list-icon">{m.icon}</div><div><div className="list-title">{m.name}</div><div className="list-sub">{m.desc}</div></div><span className="row-end">→</span></div>)}</div>
+    <div className="card"><div className="section-head" style={{marginTop:0}}><h2>Quick challenge</h2><span>🧠</span></div><p style={{fontSize:13}}>A clock shows 3:00. What is the smaller angle between its hands?</p><div className="formula">Angle = |30H − 5.5M|</div><button className="button primary" onClick={()=>openTopic("clock","practice")}>Solve this question →</button><div className="tip">Tip: The hour hand points at 3, while the minute hand points at 12.</div></div>
+   </div>
+  </div>}
+
+  {page==="learn"&&<div className="page">
+   <div className="eyebrow">THE KNOWLEDGE HUB</div><h1>Learn the <span className="gradient-text">logic behind it.</span></h1><p className="muted">Start with the concept, understand a worked example, then move to the solver and practice questions.</p>
+   <div className="field" style={{maxWidth:450,margin:"22px 0"}}><label>SEARCH TOPICS</label><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Try clocks, averages, charts..." /></div>
+   <div className="module-grid">{filtered.map(m=><ModuleCard key={m.id} m={m} onClick={()=>openTopic(m.id,"learn")} />)}</div>
+   {filtered.length===0&&<div className="card empty">No topics found. Try a different search.</div>}
+  </div>}
+
+  {page==="solver"&&<div className="page">
+   <div className="eyebrow">CALCULATE • ANALYZE • UNDERSTAND</div><h1>Your <span className="gradient-text">problem solver.</span></h1><p className="muted">Choose a module, enter the values, and get a worked result.</p>
+   <div className="card content-card" style={{marginTop:22}}>
+    <div className="field"><label>SELECT A MODULE</label><select value={moduleId} onChange={e=>{setModuleId(e.target.value);setForm({});setResult("");setError("");}}>{modules.map(m=><option key={m.id} value={m.id}>{m.icon} {m.name}</option>)}</select></div>
+    <div className="topic-header" style={{marginTop:22,marginBottom:5}}><div className="topic-icon">{mod.icon}</div><div><h2 style={{marginBottom:4}}>{mod.name}</h2><p>{mod.desc}</p></div></div>
+   </div>
+   <div className="two-col">
+    <div className="card content-card">
+     <h3>Enter your problem</h3>
+     <SolverFields id={moduleId} form={form} setField={setField}/>
+     <div className="button-row"><button className="button primary" onClick={solve}>Calculate result ✦</button><button className="button secondary" onClick={()=>{setForm({});setResult("");setError("");}}>Reset</button></div>
+     {error&&<div className="result" style={{borderColor:"#85434b"}}><h3 style={{color:"#ff9099"}}>⚠ Check your input</h3><p>{error}</p></div>}
+     {result&&<div className="result"><h3>✓ Solution generated</h3><p>{result}</p><button className="button secondary" onClick={()=>navigator.clipboard?.writeText(result)}>Copy result</button></div>}
+    </div>
+    <div className="card content-card"><h3>Concept reminder</h3><div className="formula">{mod.formula}</div><p className="muted small">{mod.concept}</p><div className="tip">💡 {mod.tip}</div><button className="button secondary" onClick={()=>openTopic(moduleId,"learn")}>Review this concept →</button>
+     {dataModuleIds.includes(moduleId)&&<ChartPreview id={moduleId} values={form.values}/>}
+    </div>
+   </div>
+  </div>}
+
+  {page==="practice"&&<div className="page">
+   <div className="eyebrow">DAILY BRAIN TRAINING</div><h1>Enter the <span className="gradient-text">practice arena.</span></h1><p className="muted">Test your understanding. Get instant feedback and learn from every answer.</p>
+   <div className="stats"><div className="stat"><div className="stat-label">CORRECT ANSWERS</div><div className="stat-value">{practiceScore}</div><div className="stat-foot">Keep improving</div></div><div className="stat"><div className="stat-label">ATTEMPTS</div><div className="stat-value">{answered}</div><div className="stat-foot">Questions answered</div></div><div className="stat"><div className="stat-label">ACCURACY</div><div className="stat-value">{accuracy}%</div><div className="stat-foot">Overall performance</div></div><div className="stat"><div className="stat-label">CURRENT STREAK</div><div className="stat-value">{streak} 🔥</div><div className="stat-foot">Consecutive correct</div></div></div>
+   <div className="two-col">
+    <div className="card content-card">
+     <div className="field"><label>CHOOSE A TOPIC</label><select value={moduleId} onChange={e=>{setModuleId(e.target.value);setPracticeIndex(0);setSelected({});setChecked({});}}>{modules.map(m=><option key={m.id} value={m.id}>{m.icon} {m.name}</option>)}</select></div>
+     <div style={{display:"flex",justifyContent:"space-between",margin:"24px 0 12px"}}><span className="question-number">QUESTION {(practiceIndex%questions.length)+1} / {questions.length}</span><span className="tag">{mod.tag}</span></div>
+     <div className="mini-progress"><span style={{width:((practiceIndex%questions.length+1)/questions.length*100)+"%"}}/></div>
+     <h2 style={{fontSize:20,lineHeight:1.5,marginTop:24}}>{q.q}</h2>
+     {q.opts.map((opt,i)=><label key={opt} className={"choice "+(selected[practiceIndex]===i?"selected ":"")+(checked[practiceIndex]&&i===q.a?"correct ":"")+(checked[practiceIndex]&&selected[practiceIndex]===i&&i!==q.a?"wrong":"")}><input type="radio" name={"q"+moduleId+practiceIndex} checked={selected[practiceIndex]===i} disabled={!!checked[practiceIndex]} onChange={()=>setSelected(old=>({...old,[practiceIndex]:i}))}/><span>{String.fromCharCode(65+i)}. {opt}</span>{checked[practiceIndex]&&i===q.a&&<span style={{marginLeft:"auto",color:"var(--green)"}}>✓</span>}</label>)}
+     {checked[practiceIndex]&&<div className="result"><h3>{selected[practiceIndex]===q.a?"Correct! Excellent work.":"Not quite — learn from it."}</h3><p>{q.why}</p></div>}
+     <div className="button-row">{!checked[practiceIndex]?<button className="button primary" onClick={answerQuestion} disabled={selected[practiceIndex]===undefined} style={{opacity:selected[practiceIndex]===undefined?.5:1}}>Check answer ✓</button>:<button className="button primary" onClick={nextQuestion}>Next question →</button>}<button className="button secondary" onClick={()=>openTopic(moduleId,"learn")}>Review concept</button></div>
+    </div>
+    <div className="card content-card"><h3>How to improve</h3><div className="list-row"><div className="list-icon">📖</div><div><div className="list-title">Understand first</div><div className="list-sub">Read the concept and formula before guessing.</div></div></div><div className="list-row"><div className="list-icon">🧮</div><div><div className="list-title">Show the steps</div><div className="list-sub">Write the formula and substitute values.</div></div></div><div className="list-row"><div className="list-icon">🔁</div><div><div className="list-title">Try again</div><div className="list-sub">Use explanations to learn from mistakes.</div></div></div><div className="tip">Your progress is saved locally in this browser. Clearing browser storage will reset saved statistics.</div><button className="button secondary" onClick={()=>{if(confirm("Reset all saved practice progress?")){setPracticeScore(0);setAnswered(0);setStreak(0);setHistory([]);setSelected({});setChecked({});setPracticeIndex(0);}}}>Reset saved progress</button></div>
+   </div>
+  </div>}
+
+  {page==="topic"&&<div className="page">
+   <div className="topic-header"><div className="topic-icon" style={{background:mod.color+"20",borderColor:mod.color+"66"}}>{mod.icon}</div><div style={{flex:1}}><div className="eyebrow">{mod.tag} MODULE</div><h1 style={{marginBottom:4}}>{mod.name}</h1><p>{mod.desc}</p></div><span className="badge">✦ INTERACTIVE</span></div>
+   <div className="tabs"><button className={"tab "+(topicTab==="learn"?"active":"")} onClick={()=>setTopicTab("learn")}>📖 Learn concept</button><button className={"tab "+(topicTab==="solve"?"active":"")} onClick={()=>setTopicTab("solve")}>⌘ Solve a problem</button><button className={"tab "+(topicTab==="practice"?"active":"")} onClick={()=>setTopicTab("practice")}>⚡ Practice</button></div>
+   {topicTab==="learn"&&<div className="two-col">
+    <div className="card content-card"><div className="eyebrow">01 / UNDERSTAND</div><h2>The core concept</h2><p>{mod.concept}</p><div className="formula">{mod.formula}</div><div className="tip">💡 Strategy: {mod.tip}</div><h3 style={{marginTop:25}}>Worked example</h3><p>{mod.example}</p><button className="button primary" onClick={()=>{setTopicTab("solve");setForm({});setResult("");setError("");}}>Try it yourself →</button></div>
+    <div className="card content-card"><div className="eyebrow">02 / REMEMBER</div><h2>Quick revision</h2><div className="list-row"><div className="list-icon">①</div><div><div className="list-title">Identify the given information</div><div className="list-sub">Separate known values from the unknown.</div></div></div><div className="list-row"><div className="list-icon">②</div><div><div className="list-title">Select the correct rule</div><div className="list-sub">Use the formula that matches the question.</div></div></div><div className="list-row"><div className="list-icon">③</div><div><div className="list-title">Calculate and verify</div><div className="list-sub">Check units, totals, and reasonableness.</div></div></div><div className="tip">A good solution explains why the answer is correct, not just what the answer is.</div><button className="button secondary" onClick={()=>setTopicTab("practice")}>Test my understanding →</button></div>
+   </div>}
+   {topicTab==="solve"&&<div className="two-col">
+    <div className="card content-card"><h2>Solver workspace</h2><p className="muted small">Enter the values from your question. Invalid or incomplete inputs will show an error.</p><SolverFields id={moduleId} form={form} setField={setField}/><div className="button-row"><button className="button primary" onClick={solve}>Solve step by step ✦</button><button className="button secondary" onClick={()=>{setForm({});setResult("");setError("");}}>Clear</button></div>{error&&<div className="result" style={{borderColor:"#85434b"}}><h3 style={{color:"#ff9099"}}>Input error</h3><p>{error}</p></div>}{result&&<div className="result"><h3>✓ Your solution</h3><p>{result}</p><button className="button secondary" onClick={()=>navigator.clipboard?.writeText(result)}>Copy result</button></div>}</div>
+    <div className="card content-card"><h3>Formula reference</h3><div className="formula">{mod.formula}</div><p className="muted small">{mod.concept}</p><div className="tip">{mod.example}</div>{dataModuleIds.includes(moduleId)&&<ChartPreview id={moduleId} values={form.values}/>}</div>
+   </div>}
+   {topicTab==="practice"&&<div className="two-col">
+    <div className="card content-card"><div className="question-number">PRACTICE QUESTION {(practiceIndex%questions.length)+1}</div><h2 style={{lineHeight:1.5,marginTop:18}}>{q.q}</h2>{q.opts.map((opt,i)=><label key={opt} className={"choice "+(selected[practiceIndex]===i?"selected ":"")+(checked[practiceIndex]&&i===q.a?"correct ":"")+(checked[practiceIndex]&&selected[practiceIndex]===i&&i!==q.a?"wrong":"")}><input type="radio" name={"topicq"+moduleId+practiceIndex} checked={selected[practiceIndex]===i} disabled={!!checked[practiceIndex]} onChange={()=>setSelected(old=>({...old,[practiceIndex]:i}))}/>{String.fromCharCode(65+i)}. {opt}</label>)}{checked[practiceIndex]&&<div className="result"><h3>{selected[practiceIndex]===q.a?"Correct!":"Review the solution"}</h3><p>{q.why}</p></div>}<div className="button-row">{!checked[practiceIndex]?<button className="button primary" disabled={selected[practiceIndex]===undefined} onClick={answerQuestion}>Check answer</button>:<button className="button primary" onClick={nextQuestion}>Next question →</button>}<button className="button secondary" onClick={resetPractice}>Restart topic</button></div></div>
+    <div className="card content-card"><h3>Learning progress</h3><div className="stat-value">{accuracy}%</div><p className="muted small">Overall practice accuracy across all topics.</p><div className="mini-progress"><span style={{width:accuracy+"%"}}/></div><div className="tip">Use the Learn tab to review the concept, then solve a sample problem before returning to practice.</div><button className="button secondary" onClick={()=>setTopicTab("learn")}>Back to concept</button></div>
+   </div>}
+  </div>}
+  <footer>LogicIQ · Logic & Data Interpretation Learning System · Built with React · Academic Project</footer>
+ </main>
+ </div></div>;
+}
+
+function ModuleCard({m,onClick}){
+ return <div className="card module-card" onClick={onClick} style={{"--glow":m.color,"--soft":m.color+"19",cursor:"pointer"}} role="button" tabIndex="0" onKeyDown={e=>{if(e.key==="Enter"||e.key===" ")onClick();}}>
+  <div className="module-top"><div className="module-icon">{m.icon}</div><span className="tag">{m.tag}</span></div><h3>{m.name}</h3><p>{m.desc}</p><div className="module-footer"><span>Learn · Solve · Practice</span><span className="arrow">↗</span></div>
+ </div>;
+}
+
+function SolverFields({id,form,setField}){
+ const field=(key,label,placeholder,help,type="number")=><div className="field" key={key}><label>{label}</label><input type={type} value={form[key]??""} placeholder={placeholder} onChange={e=>setField(key,e.target.value)}/>{help&&<small>{help}</small>}</div>;
+ const area=(key,label,placeholder,help)=><div className="field" key={key} style={{marginTop:15}}><label>{label}</label><textarea value={form[key]??""} placeholder={placeholder} onChange={e=>setField(key,e.target.value)}/>{help&&<small>{help}</small>}</div>;
+ if(id==="clock")return <div className="form-grid">{field("hour","Hour (0–23)","e.g. 15","Use 24-hour time")}{field("minute","Minute (0–59)","e.g. 20","Minutes past the hour")}</div>;
+ if(id==="calendar")return <div className="form-grid">{field("year","Year","e.g. 2026","1–9999")}{field("month","Month (1–12)","e.g. 10","January = 1")}{field("day","Day of month","e.g. 20","Enter a valid date")}</div>;
+ if(id==="pattern")return area("sequence","Number sequence","2, 5, 8, 11","Enter at least three numbers. The solver detects simple arithmetic, geometric, and constant-second-difference patterns.");
+ if(id==="pie")return area("values","Category values","25, 35, 40","Comma-separated non-negative values; they will be converted to percentages and angles.");
+ if(id==="missing")return <><div className="form-grid">{field("total","Required total","e.g. 100","Sum of all values")}{field("count","Total number of values","e.g. 4","Include the missing value")}</div>{area("known","Known values","20, 25, 30","Enter all known values; the solver subtracts their sum from the required total.")}</>;
+ if(id==="scatter")return area("values","X,Y pairs","1,2,2,4,3,6,4,8","Enter paired values in order: x1,y1,x2,y2,...");
+ if(["table","bar","line","histogram","caselet","webdi"].includes(id))return area("values",id==="caselet"?"Values extracted from the caselet":"Dataset values","20, 30, 40, 50","Enter numerical values separated by commas. The solver calculates summary statistics and changes.");
+ return <div className="tip">Select a supported module to begin.</div>;
+}
+
+function ChartPreview({id,values}){
+ let vals=[];
+ try{vals=values?parseNumbers(values):[]}catch(e){}
+ if(!vals.length)vals=[18,32,25,45,38];
+ const max=Math.max(...vals.map(Math.abs),1);
+ const isPie=id==="pie";
+ return <div style={{marginTop:25}}><h3>Live visualization</h3>{isPie?<><div className="pie-chart" style={{background:`conic-gradient(${vals.map((v,i)=>{const colors=["#9270ff","#4de0dc","#ff73bd","#ffbb70","#65a6ff"];const before=vals.slice(0,i).reduce((s,x)=>s+x,0)/vals.reduce((s,x)=>s+x,0)*100;const after=(vals.slice(0,i+1).reduce((s,x)=>s+x,0)/vals.reduce((s,x)=>s+x,0))*100;return `${colors[i%colors.length]} ${before}% ${after}%`;}).join(",")})`}}></div><div className="legend">{vals.map((v,i)=><span key={i} style={{"--c":["#9270ff","#4de0dc","#ff73bd","#ffbb70","#65a6ff"][i%5]}}>Cat {i+1}: {v}</span>)}</div></>:<div className="chart-bars">{vals.slice(0,12).map((v,i)=><div className="chart-bar-wrap" key={i}><span className="chart-number">{v}</span><div className="chart-bar" style={{height:Math.max(3,Math.abs(v)/max*72)+"%",animationDelay:i*.04+"s"}}></div><span className="chart-label">{i+1}</span></div>)}</div>}<p className="muted small">This chart updates from the current input values when they are valid.</p></div>;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
